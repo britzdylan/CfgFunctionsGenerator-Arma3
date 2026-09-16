@@ -4,14 +4,14 @@
   "description": "Adds an editor button for automatic (re)generation of custom CfgFunctions and CfgRemoteExec for Arma 3.",
   "icon": "logo/icon.png",
   "version": "1.5.1",
-  "publisher": "Ezcoo",
+  "publisher": "britzdylan",
   "license": "SEE LICENSE IN LICENSE",
   "engines": {
     "vscode": "^1.80.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Ezcoo/CfgFunctionsGenerator-Arma3.git"
+    "url": "https://github.com/britzdylan/CfgFunctionsGenerator-Arma3.git"
   },
   "categories": [
     "Formatters",

@@ -1,0 +1,61 @@
+name: Publish to Open VSX
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    name: Test and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Compile
+        run: npm run compile
+
+      - name: Package VSIX
+        run: |
+          mkdir -p dist
+          npx --yes @vscode/vsce package --out dist/
+
+      - name: Upload extension package
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-extension-package
+          path: dist/*.vsix
+          if-no-files-found: error
+
+  publish-to-openvsx:
+    name: Publish to Open VSX Registry
+    needs:
+      - test-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the extension package
+        uses: actions/download-artifact@v4
+        with:
+          name: vscode-extension-package
+          path: dist/
+      - name: Publish to Open VSX Registry
+        run: npx ovsx publish dist/*.vsix
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
